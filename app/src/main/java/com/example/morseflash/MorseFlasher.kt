@@ -40,13 +40,13 @@ class MorseFlasher(
         flashingJob?.cancel()
         flashingJob = scope.launch(Dispatchers.Main.immediate) {
             try {
-                onStatus?.invoke("Flashing: ${}text")
+                onStatus?.invoke("Flashing: $text")
                 performSequence(textToSequence(text), unitMs)
                 onStatus?.invoke("Done")
             } catch (e: CancellationException) {
                 onStatus?.invoke("Stopped")
             } catch (t: Throwable) {
-                onStatus?.invoke("Error: ${}{t.message}")
+                onStatus?.invoke("Error: ${t.message}")
             } finally {
                 setTorch(false)
             }
@@ -83,15 +83,15 @@ class MorseFlasher(
     private data class Step(val on: Boolean, val units: Long)
 
     private fun textToSequence(text: String): List<Step> {
-        val sanitized = text.uppercase().filter { it in MORSE_MAP.keys || it ==  }
+        val sanitized = text.uppercase().filter { it in MORSE_MAP.keys || it == ' ' }
         val steps = mutableListOf<Step>()
-        val words = sanitized.split(Regex("\s+"))
+        val words = sanitized.split(Regex("\\s+"))
         words.forEachIndexed { wIndex, word ->
             word.forEachIndexed { cIndex, ch ->
                 val code = MORSE_MAP[ch] ?: return@forEachIndexed
                 code.forEachIndexed { i, symbol ->
                     // signal on (dot=1, dash=3)
-                    steps += Step(on = true, units = if (symbol == .) 1 else 3)
+                    steps += Step(on = true, units = if (symbol == '.') 1 else 3)
                     // intra-character gap (1) if not last symbol of letter
                     if (i != code.lastIndex) steps += Step(on = false, units = 1)
                 }
@@ -124,13 +124,13 @@ class MorseFlasher(
 
     companion object {
         private val MORSE_MAP: Map<Char, String> = mapOf(
-            A to ".-", B to "-...", C to "-.-.", D to "-..", E to ".",
-            F to "..-.", G to "--.", H to "....", I to "..", J to ".---",
-            K to "-.-", L to ".-..", M to "--", N to "-.", O to "---",
-            P to ".--.", Q to "--.-", R to ".-.", S to "...", T to "-",
-            U to "..-", V to "...-", W to ".--", X to "-..-", Y to "-.--", Z to "--..",
-            0 to "-----", 1 to ".----", 2 to "..---", 3 to "...--", 4 to "....-",
-            5 to ".....", 6 to "-....", 7 to "--...", 8 to "---..", 9 to "----."
+            'A' to ".-", 'B' to "-...", 'C' to "-.-.", 'D' to "-..", 'E' to ".",
+            'F' to "..-.", 'G' to "--.", 'H' to "....", 'I' to "..", 'J' to ".---",
+            'K' to "-.-", 'L' to ".-..", 'M' to "--", 'N' to "-.", 'O' to "---",
+            'P' to ".--.", 'Q' to "--.-", 'R' to ".-.", 'S' to "...", 'T' to "-",
+            'U' to "..-", 'V' to "...-", 'W' to ".--", 'X' to "-..-", 'Y' to "-.--", 'Z' to "--..",
+            '0' to "-----", '1' to ".----", '2' to "..---", '3' to "...--", '4' to "....-",
+            '5' to ".....", '6' to "-....", '7' to "--...", '8' to "---..", '9' to "----."
         )
     }
 }
