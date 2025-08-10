@@ -1,0 +1,2 @@
+rootProject.name = "morse-flash"
+include(":app")

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Morse Flash</string>
+    <string name="hint_custom_text">Enter text to flash (A–Z, 0–9, space)</string>
+    <string name="btn_flash_sos">Flash SOS</string>
+    <string name="btn_flash_custom">Flash Custom</string>
+    <string name="btn_stop">Stop</string>
+    <string name="status_ready">Ready</string>
+</resources>
